@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MessageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
+#[ApiResource]
 class Message
 {
     #[ORM\Id]
@@ -17,8 +19,13 @@ class Message
     #[ORM\Column(type: Types::TEXT)]
     private ?string $text = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $created_at = null;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $date_created = null;
+
+    #[ORM\OneToOne(inversedBy: 'message', cascade: ['persist', 'remove'])]
+    private ?project $project = null;
+
+
 
     public function getId(): ?int
     {
@@ -37,15 +44,29 @@ class Message
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getDateCreated(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->date_created;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    public function setDateCreated(\DateTimeImmutable $date_created): static
     {
-        $this->created_at = $created_at;
+        $this->date_created = $date_created;
 
         return $this;
     }
+
+    public function getproject(): ?project
+    {
+        return $this->project;
+    }
+
+    public function setproject(?project $project): static
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
+   
 }

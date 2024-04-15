@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
+#[ApiResource]
 class Contact
 {
     #[ORM\Id]
@@ -13,38 +15,56 @@ class Contact
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $type = null;
-
     #[ORM\Column(length: 255)]
-    private ?string $valeur = null;
+    private ?string $value = null;
 
+    #[ORM\OneToOne(inversedBy: 'contact', cascade: ['persist', 'remove'])]
+    private ?Type $type = null;
+
+    #[ORM\OneToOne(inversedBy: 'contact', cascade: ['persist', 'remove'])]
+    private ?Profil $profil = null;
+
+  
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function setValue(string $value): static
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getType(): ?Type
     {
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(?Type $type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function getValeur(): ?string
+    public function getProfil(): ?Profil
     {
-        return $this->valeur;
+        return $this->profil;
     }
 
-    public function setValeur(string $valeur): static
+    public function setProfil(?Profil $profil): static
     {
-        $this->valeur = $valeur;
+        $this->profil = $profil;
 
         return $this;
     }
+
+    
 }

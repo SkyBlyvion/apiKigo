@@ -2,27 +2,27 @@
 
 namespace App\Repository;
 
-use App\Entity\TypeContact;
+use App\Entity\Type;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<TypeContact>
+ * @extends ServiceEntityRepository<Type>
  *
- * @method TypeContact|null find($id, $lockMode = null, $lockVersion = null)
- * @method TypeContact|null findOneBy(array $criteria, array $orderBy = null)
- * @method TypeContact[]    findAll()
- * @method TypeContact[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Type|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Type|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Type[]    findAll()
+ * @method Type[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TypeContactRepository extends ServiceEntityRepository
+class TypeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TypeContact::class);
+        parent::__construct($registry, Type::class);
     }
 
     //    /**
-    //     * @return TypeContact[] Returns an array of TypeContact objects
+    //     * @return Type[] Returns an array of Type objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -36,7 +36,7 @@ class TypeContactRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?TypeContact
+    //    public function findOneBySomeField($value): ?Type
     //    {
     //        return $this->createQueryBuilder('t')
     //            ->andWhere('t.exampleField = :val')

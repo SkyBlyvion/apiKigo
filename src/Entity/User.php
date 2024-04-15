@@ -30,11 +30,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $nom = null;
+    #[ORM\Column]
+    private ?int $type = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $prenom = null;
+    #[ORM\Column(length: 255)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $lastname = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Profil $profil = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Post $post = null;
 
     public function getId(): ?int
     {
@@ -111,26 +120,77 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getNom(): ?string
+    public function getType(): ?int
     {
-        return $this->nom;
+        return $this->type;
     }
 
-    public function setNom(?string $nom): static
+    public function setType(int $type): static
     {
-        $this->nom = $nom;
+        $this->type = $type;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->prenom;
+        return $this->firstname;
     }
 
-    public function setPrenom(?string $prenom): static
+    public function setFirstname(string $firstname): static
     {
-        $this->prenom = $prenom;
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getProfil(): ?Profil
+    {
+        return $this->profil;
+    }
+
+    public function setProfil(Profil $profil): static
+    {
+        // set the owning side of the relation if necessary
+        if ($profil->getUser() !== $this) {
+            $profil->setUser($this);
+        }
+
+        $this->profil = $profil;
+
+        return $this;
+    }
+
+    public function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Post $post): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($post === null && $this->post !== null) {
+            $this->post->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($post !== null && $post->getUser() !== $this) {
+            $post->setUser($this);
+        }
+
+        $this->post = $post;
 
         return $this;
     }
