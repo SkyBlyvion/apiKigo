@@ -24,7 +24,7 @@ class Competence
 
     #[ORM\ManyToOne(inversedBy: 'competence')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?project $project = null;
+    private ?Project $project = null;
 
     public function getId(): ?int
     {

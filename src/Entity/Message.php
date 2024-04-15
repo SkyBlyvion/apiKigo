@@ -23,7 +23,7 @@ class Message
     private ?\DateTimeImmutable $date_created = null;
 
     #[ORM\OneToOne(inversedBy: 'message', cascade: ['persist', 'remove'])]
-    private ?project $project = null;
+    private ?Project $project = null;
 
 
 

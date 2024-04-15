@@ -32,7 +32,7 @@ class Post
     private ?\DateTimeInterface $updated_date = null;
 
     #[ORM\OneToOne(mappedBy: 'post', cascade: ['persist', 'remove'])]
-    private ?project $project = null;
+    private ?Project $project = null;
 
     #[ORM\OneToOne(inversedBy: 'post', cascade: ['persist', 'remove'])]
     private ?User $user = null;
