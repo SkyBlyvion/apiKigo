@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+    <h1>Profil</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ profil.id }}</td>
+            </tr>
+            <tr>
+                <th>Biography</th>
+                <td>{{ profil.biography }}</td>
+            </tr>
+            <tr>
+                <th>Filiere</th>
+                <td>{{ profil.filiere }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_profil_index') }}">back to list</a>
+
+    <a href="{{ path('app_profil_edit', {'id': profil.id}) }}">edit</a>
+
+    {{ include('profil/_delete_form.html.twig') }}
+{% endblock %}

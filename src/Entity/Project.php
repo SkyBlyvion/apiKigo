@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: projectRepository::class)]
 #[ApiResource]
-class project
+class Project
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
