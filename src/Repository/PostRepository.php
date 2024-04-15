@@ -7,14 +7,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Posts>
+ * @extends ServiceEntityRepository<Post>
  *
- * @method Posts|null find($id, $lockMode = null, $lockVersion = null)
- * @method Posts|null findOneBy(array $criteria, array $orderBy = null)
- * @method Posts[]    findAll()
- * @method Posts[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Post|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Post|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Post[]    findAll()
+ * @method Post[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PostsRepository extends ServiceEntityRepository
+class PostRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -22,7 +22,7 @@ class PostsRepository extends ServiceEntityRepository
     }
 
     //    /**
-    //     * @return Posts[] Returns an array of Posts objects
+    //     * @return Post[] Returns an array of Post objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -36,7 +36,7 @@ class PostsRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Posts
+    //    public function findOneBySomeField($value): ?Post
     //    {
     //        return $this->createQueryBuilder('p')
     //            ->andWhere('p.exampleField = :val')
