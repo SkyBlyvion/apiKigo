@@ -10,6 +10,7 @@ use App\Entity\Contact;
 use App\Entity\Message;
 use App\Controller\Admin\PostCrudController;
 use App\Entity\Competence;
+use App\Entity\Project;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -77,8 +78,8 @@ class DashboardController extends AbstractDashboardController
         ]);
 
         yield MenuItem::subMenu('Gestion des projets', 'fa fa-briefcase')->setSubItems([
-            MenuItem::linkToCrud('Ajouter un projet', 'fa fa-plus', Post::class)->setAction(Crud::PAGE_NEW),
-            MenuItem::linkToCrud('Liste des projets', 'fa fa-list', Post::class),
+            MenuItem::linkToCrud('Ajouter un projet', 'fa fa-plus', Project::class)->setAction(Crud::PAGE_NEW),
+            MenuItem::linkToCrud('Liste des projets', 'fa fa-list', Project::class),
         ]);
 
         yield MenuItem::subMenu('Gestion des compétences', 'fa fa-puzzle-piece')->setSubItems([
