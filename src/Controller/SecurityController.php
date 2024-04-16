@@ -2,26 +2,39 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route(path: '/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    #[Route('/login', name: 'app_login', methods: ['POST'])]
+    public function login(AuthenticationUtils $authenticationUtils): JsonResponse
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
-
-        // get the login error if there is one
+        //on vérifie que l'utilisateur est bien connecté
+        if($this->getUser()){
+            return new JsonResponse([
+                'success' => true,
+                'id' => $this->getUser()->getId(),
+                'email' => $this->getUser()->getEmail(),
+                'firstname' => $this->getUser()->getFirstname(),
+                'message' => 'Utilisateur déja en session'
+            ]);
+        }
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return new JsonResponse([
+            'success' => true,
+            'id' => $this->getUser()->getId(),
+            'email' => $this->getUser()->getEmail(),
+            'firstname' => $this->getUser()->getFirstname(),
+            'last_username' => $lastUsername,
+            'error' => $error?->getMessage(),
+            'message' => 'Connexion réussie'
+        ]);
     }
 
     #[Route(path: '/logout', name: 'app_logout')]

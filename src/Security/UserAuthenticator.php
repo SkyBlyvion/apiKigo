@@ -3,18 +3,19 @@
 namespace App\Security;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\SecurityRequestAttributes;
-use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class UserAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -26,13 +27,14 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     {
     }
 
+
     public function authenticate(Request $request): Passport
     {
-        // on récupère les données envoyées par le front
+        // on récupère les données du formulaire
         $email = $request->request->get('email', '');
-        //on stocke l'email dans la session pour le réafficher en cas d'erreur
+        // on stocke l'email dans la session pour le réafficher dans le formulaire en cas d'erreur
         $request->getSession()->set(
-            SecurityRequestAttributes::LAST_USERNAME,
+            Security::LAST_USERNAME,
             $email
         );
 
@@ -40,18 +42,18 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
             new UserBadge($email),
             new PasswordCredentials($request->request->get('password', '')),
             [
-                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+                new CsrfTokenBadge('authenticate', $request->get('_csrf_token')),
             ]
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?JsonResponse
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $user = $token->getUser();
         $data = [
             'id' => $user->getId(),
-            'name' => $user->getName(),
             'email' => $user->getEmail(),
+            'firstname' => $user->getFirstname(),
         ];
 
         return new JsonResponse($data);
