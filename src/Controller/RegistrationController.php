@@ -28,8 +28,9 @@ class RegistrationController extends AbstractController
         //on crée un nouvel utilisateur
         $user = new User();
         //on lui set les paramètres
+        $user->setLastname($data['lastName']);
+        $user->setFirstname($data['firstName']);
         $user->setEmail($data['email']);
-        $user->setFirstname($data['firstname']);
         $user->setPassword(
             $userPasswordHasher->hashPassword(
                 $user,

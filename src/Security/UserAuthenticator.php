@@ -54,6 +54,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
             'id' => $user->getId(),
             'email' => $user->getEmail(),
             'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
         ];
 
         return new JsonResponse($data);

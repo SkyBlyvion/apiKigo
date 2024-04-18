@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,6 +19,7 @@ class SecurityController extends AbstractController
                 'id' => $this->getUser()->getId(),
                 'email' => $this->getUser()->getEmail(),
                 'firstname' => $this->getUser()->getFirstname(),
+                'lastname' => $this->getUser()->getLastname(),
                 'message' => 'Utilisateur déja en session'
             ]);
         }
@@ -31,6 +31,7 @@ class SecurityController extends AbstractController
             'id' => $this->getUser()->getId(),
             'email' => $this->getUser()->getEmail(),
             'firstname' => $this->getUser()->getFirstname(),
+            'lastname' => $this->getUser()->getLastname(),
             'last_username' => $lastUsername,
             'error' => $error?->getMessage(),
             'message' => 'Connexion réussie'
