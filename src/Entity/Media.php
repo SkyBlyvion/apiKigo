@@ -5,24 +5,37 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']]
+)]
 #[ApiResource]
 class Media
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read', 'user:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $label = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $url_img = null;
 
     #[ORM\OneToOne(inversedBy: 'media', cascade: ['persist', 'remove'])]
     private ?Post $post = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private ?User $user = null;
+
 
     public function getId(): ?int
     {
@@ -61,6 +74,30 @@ class Media
     public function setPost(?Post $post): static
     {
         $this->post = $post;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of user
+     *
+     * @return ?User
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @param ?User $user
+     *
+     * @return self
+     */
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

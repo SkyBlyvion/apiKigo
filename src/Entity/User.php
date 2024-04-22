@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -61,10 +62,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[Groups(['user:read', 'user:write'])]
     private ?Profil $profil = null;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Post $post = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Media::class)]
+    #[Groups(['user:read', 'user:write'])]
+    private Collection $medias;
 
     public function getId(): ?int
     {
@@ -212,6 +218,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->post = $post;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of medias
+     *
+     * @return Collection
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    /**
+     * Set the value of medias
+     *
+     * @param Collection $medias
+     *
+     * @return self
+     */
+    public function setMedias(Collection $medias): self
+    {
+        $this->medias = $medias;
 
         return $this;
     }
