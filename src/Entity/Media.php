@@ -33,7 +33,7 @@ class Media
     #[ORM\OneToOne(inversedBy: 'media', cascade: ['persist', 'remove'])]
     private ?Post $post = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'medias')]
     private ?User $user = null;
 
 
