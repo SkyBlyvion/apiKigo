@@ -387,4 +387,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    // Add and remove projects
+    public function addProject(Project $project): self {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+            $project->addUser($this); // Ensure bidirectional synchronization
+        }
+        return $this;
+    }
+
+    public function removeProject(Project $project): self {
+        if ($this->projects->removeElement($project)) {
+            $project->removeUser($this);
+        }
+        return $this;
+    }
+
+    // Add and remove competences
+    public function addCompetence(Competence $competence): self {
+        if (!$this->competences->contains($competence)) {
+            $this->competences->add($competence);
+            $competence->addUser($this); // Ensure bidirectional synchronization
+        }
+        return $this;
+    }
+
+    public function removeCompetence(Competence $competence): self {
+        if ($this->competences->removeElement($competence)) {
+            $competence->removeUser($this);
+        }
+        return $this;
+    }
+
+    // Add and remove messages
+    public function addMessage(Message $message): self {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setUser($this); // Set the inverse side
+        }
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self {
+        if ($this->messages->removeElement($message)) {
+            $message->setUser(null);
+        }
+        return $this;
+    }
+
+    // Add and remove contacts
+    public function addContact(Contact $contact): self {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts->add($contact);
+            $contact->setUser($this); // Set the inverse side
+        }
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): self {
+        if ($this->contacts->removeElement($contact)) {
+            $contact->setUser(null);
+        }
+        return $this;
+    }
+
 }

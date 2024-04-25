@@ -106,6 +106,39 @@ class Project
         return $this;
     }
 
+    // Add and remove users
+    public function addUser(User $user): self {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addProject($this); // Ensure bidirectional synchronization
+        }
+        return $this;
+    }
+
+    public function removeUser(User $user): self {
+        if ($this->users->removeElement($user)) {
+            $user->removeProject($this);
+        }
+        return $this;
+    }
+
+    // Add and remove filieres
+    public function addFiliere(Filiere $filiere): self {
+        if (!$this->filieres->contains($filiere)) {
+            $this->filieres->add($filiere);
+            $filiere->addProject($this); // Ensure bidirectional synchronization
+        }
+        return $this;
+    }
+
+    public function removeFiliere(Filiere $filiere): self {
+        if ($this->filieres->removeElement($filiere)) {
+            $filiere->removeProject($this);
+        }
+        return $this;
+    }
+
+
     public function getPost(): ?Post
     {
         return $this->post;
@@ -137,23 +170,6 @@ class Project
     public function getFilieres(): Collection
     {
         return $this->filieres;
-    }
-
-    public function addFiliere(Filiere $filiere): self
-    {
-        if (!$this->filieres->contains($filiere)) {
-            $this->filieres[] = $filiere;
-            $filiere->getProjects()->add($this);
-        }
-        return $this;
-    }
-
-    public function removeFiliere(Filiere $filiere): self
-    {
-        if ($this->filieres->removeElement($filiere)) {
-            $filiere->getProjects()->removeElement($this);
-        }
-        return $this;
     }
 
     /**

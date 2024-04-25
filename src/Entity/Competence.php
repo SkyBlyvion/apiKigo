@@ -87,4 +87,21 @@ class Competence
 
         return $this;
     }
+
+    // Add and remove users
+    public function addUser(User $user): self {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addCompetence($this); // Ensure bidirectional synchronization
+        }
+        return $this;
+    }
+
+    public function removeUser(User $user): self {
+        if ($this->users->removeElement($user)) {
+            $user->removeCompetence($this);
+        }
+        return $this;
+    }
+
 }
