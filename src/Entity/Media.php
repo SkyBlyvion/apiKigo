@@ -33,9 +33,6 @@ class Media
     #[ORM\OneToOne(inversedBy: 'media', cascade: ['persist', 'remove'])]
     private ?Post $post = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'medias')]
-    private ?User $user = null;
-
 
     public function getId(): ?int
     {
@@ -78,27 +75,5 @@ class Media
         return $this;
     }
 
-    /**
-     * Get the value of user
-     *
-     * @return ?User
-     */
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
 
-    /**
-     * Set the value of user
-     *
-     * @param ?User $user
-     *
-     * @return self
-     */
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
 }

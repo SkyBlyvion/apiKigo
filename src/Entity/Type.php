@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+// classe pour les types de contact
 #[ORM\Entity(repositoryClass: TypeRepository::class)]
 #[ApiResource]
 class Type

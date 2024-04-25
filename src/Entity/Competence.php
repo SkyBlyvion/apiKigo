@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CompetenceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompetenceRepository::class)]
@@ -20,11 +22,16 @@ class Competence
 
     #[ORM\ManyToOne(inversedBy: 'competence')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Profil $profil = null;
-
-    #[ORM\ManyToOne(inversedBy: 'competence')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
+
+    //relation table mapping user competence
+    #[ORM\ManyToMany(mappedBy: 'competences')]
+    private Collection $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -43,17 +50,7 @@ class Competence
         return $this;
     }
 
-    public function getProfil(): ?Profil
-    {
-        return $this->profil;
-    }
 
-    public function setProfil(?Profil $profil): static
-    {
-        $this->profil = $profil;
-
-        return $this;
-    }
 
     public function getproject(): ?project
     {
@@ -63,6 +60,30 @@ class Competence
     public function setproject(?project $project): static
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of users
+     *
+     * @return Collection
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    /**
+     * Set the value of users
+     *
+     * @param Collection $users
+     *
+     * @return self
+     */
+    public function setUsers(Collection $users): self
+    {
+        $this->users = $users;
 
         return $this;
     }

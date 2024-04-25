@@ -21,9 +21,9 @@ class Contact
     #[ORM\OneToOne(inversedBy: 'contact', cascade: ['persist', 'remove'])]
     private ?Type $type = null;
 
-    #[ORM\OneToOne(inversedBy: 'contact', cascade: ['persist', 'remove'])]
-    private ?Profil $profil = null;
-
+    //relation avec user
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'contacts')]
+    private ?User $user = null;
   
     public function getId(): ?int
     {
@@ -54,17 +54,29 @@ class Contact
         return $this;
     }
 
-    public function getProfil(): ?Profil
+
+
+    /**
+     * Get the value of user
+     *
+     * @return ?User
+     */
+    public function getUser(): ?User
     {
-        return $this->profil;
+        return $this->user;
     }
 
-    public function setProfil(?Profil $profil): static
+    /**
+     * Set the value of user
+     *
+     * @param ?User $user
+     *
+     * @return self
+     */
+    public function setUser(?User $user): self
     {
-        $this->profil = $profil;
+        $this->user = $user;
 
         return $this;
     }
-
-    
 }

@@ -18,9 +18,6 @@ class Project
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $filiere = null;
-
-    #[ORM\Column]
     private ?bool $isFinish = null;
 
     #[ORM\Column]
@@ -33,12 +30,29 @@ class Project
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post = null;
 
-    #[ORM\OneToOne(mappedBy: 'project', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'project', cascade: ['persist', 'remove'])]
     private ?Message $message = null;
+
+    #[ORM\ManyToMany(targetEntity:Filiere::class, inversedBy:"projects")]
+    #[ORM\JoinTable(name:"project_filiere")]
+    private Collection $filieres;
+
+    // mapping table avec project et users
+    #[ORM\ManyToMany(targetEntity:User::class, inversedBy:"projects")]
+    #[ORM\JoinTable(name:"project_user")]
+    private Collection $users;
+
+    // mapping competences et project manytomany
+    #[ORM\ManyToMany(targetEntity:Competence::class, inversedBy:"projects")]
+    #[ORM\JoinTable(name:"project_competence")]
+    private Collection $competences;
+
 
     public function __construct()
     {
         $this->competence = new ArrayCollection();
+        $this->filieres = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -46,27 +60,14 @@ class Project
         return $this->id;
     }
 
-    public function getFiliere(): ?int
-    {
-        return $this->filiere;
-    }
-
-    public function setFiliere(int $filiere): static
-    {
-        $this->filiere = $filiere;
-
-        return $this;
-    }
-
     public function isIsFinish(): ?bool
     {
         return $this->isFinish;
     }
 
-    public function setIsFinish(bool $isFinish): static
+    public function setIsFinish(bool $isFinish): self
     {
         $this->isFinish = $isFinish;
-
         return $this;
     }
 
@@ -75,40 +76,33 @@ class Project
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): static
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Competence>
-     */
     public function getCompetence(): Collection
     {
         return $this->competence;
     }
 
-    public function addCompetence(Competence $competence): static
+    public function addCompetence(Competence $competence): self
     {
         if (!$this->competence->contains($competence)) {
             $this->competence->add($competence);
-            $competence->setproject($this);
+            $competence->setProject($this);
         }
-
         return $this;
     }
 
-    public function removeCompetence(Competence $competence): static
+    public function removeCompetence(Competence $competence): self
     {
         if ($this->competence->removeElement($competence)) {
-            // set the owning side to null (unless already changed)
-            if ($competence->getproject() === $this) {
-                $competence->setproject(null);
+            if ($competence->getProject() === $this) {
+                $competence->setProject(null);
             }
         }
-
         return $this;
     }
 
@@ -117,10 +111,9 @@ class Project
         return $this->post;
     }
 
-    public function setPost(Post $post): static
+    public function setPost(?Post $post): self
     {
         $this->post = $post;
-
         return $this;
     }
 
@@ -129,19 +122,84 @@ class Project
         return $this->message;
     }
 
-    public function setMessage(?Message $message): static
+    public function setMessage(?Message $message): self
     {
-        // unset the owning side of the relation if necessary
         if ($message === null && $this->message !== null) {
             $this->message->setProject(null);
         }
-
-        // set the owning side of the relation if necessary
         if ($message !== null && $message->getProject() !== $this) {
             $message->setProject($this);
         }
-
         $this->message = $message;
+        return $this;
+    }
+
+    public function getFilieres(): Collection
+    {
+        return $this->filieres;
+    }
+
+    public function addFiliere(Filiere $filiere): self
+    {
+        if (!$this->filieres->contains($filiere)) {
+            $this->filieres[] = $filiere;
+            $filiere->getProjects()->add($this);
+        }
+        return $this;
+    }
+
+    public function removeFiliere(Filiere $filiere): self
+    {
+        if ($this->filieres->removeElement($filiere)) {
+            $filiere->getProjects()->removeElement($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Get the value of users
+     *
+     * @return Collection
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    /**
+     * Set the value of users
+     *
+     * @param Collection $users
+     *
+     * @return self
+     */
+    public function setUsers(Collection $users): self
+    {
+        $this->users = $users;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of competences
+     *
+     * @return Collection
+     */
+    public function getCompetences(): Collection
+    {
+        return $this->competences;
+    }
+
+    /**
+     * Set the value of competences
+     *
+     * @param Collection $competences
+     *
+     * @return self
+     */
+    public function setCompetences(Collection $competences): self
+    {
+        $this->competences = $competences;
 
         return $this;
     }

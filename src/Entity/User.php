@@ -50,8 +50,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups([ 'user:write'])]
     private ?string $password = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $type = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['user:read', 'user:write'])]
@@ -61,16 +59,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write'])]
     private ?string $lastname = null;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    #[Groups(['user:read', 'user:write'])]
-    private ?Profil $profil = null;
+
+    #[ORM\Column(length: 90)]
+    private ?string $biographie = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $reve = null;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Post $post = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Media::class)]
+    //relation avec contact
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Contact::class)]
     #[Groups(['user:read', 'user:write'])]
-    private Collection $medias;
+    private Collection $contacts;
+
+    //relation filiere, un user a une seule filiere
+    #[ORM\ManyToOne(targetEntity: Filiere::class, inversedBy: 'users')]
+    #[Groups(['user:read', 'user:write'])]
+    private ?Filiere $filiere = null;
+
+    // relation user a project, manytomany
+    #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'users')]
+    #[Groups(['user:read', 'user:write'])]
+    private Collection $projects;
+
+    //relation user message
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Message::class)]
+    #[Groups(['user:read', 'user:write'])]
+    private Collection $messages;
+
+    //relation compétences et user manytomany
+    #[ORM\ManyToMany(targetEntity: Competence::class, inversedBy: 'users')]
+    #[Groups(['user:read', 'user:write'])]
+    private Collection $competences;
 
     public function getId(): ?int
     {
@@ -147,17 +169,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function setType(int $type): static
-    {
-        $this->type = $type;
-
-        return $this;
-    }
 
     public function getFirstname(): ?string
     {
@@ -183,22 +194,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getProfil(): ?Profil
-    {
-        return $this->profil;
-    }
 
-    public function setProfil(Profil $profil): static
-    {
-        // set the owning side of the relation if necessary
-        if ($profil->getUser() !== $this) {
-            $profil->setUser($this);
-        }
-
-        $this->profil = $profil;
-
-        return $this;
-    }
 
     public function getPost(): ?Post
     {
@@ -222,26 +218,172 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+
+
     /**
-     * Get the value of medias
+     * Get the value of biographie
      *
-     * @return Collection
+     * @return ?string
      */
-    public function getMedias(): Collection
+    public function getBiographie(): ?string
     {
-        return $this->medias;
+        return $this->biographie;
     }
 
     /**
-     * Set the value of medias
+     * Set the value of biographie
      *
-     * @param Collection $medias
+     * @param ?string $biographie
      *
      * @return self
      */
-    public function setMedias(Collection $medias): self
+    public function setBiographie(?string $biographie): self
     {
-        $this->medias = $medias;
+        $this->biographie = $biographie;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of contacts
+     *
+     * @return Collection
+     */
+    public function getContacts(): Collection
+    {
+        return $this->contacts;
+    }
+
+    /**
+     * Set the value of contacts
+     *
+     * @param Collection $contacts
+     *
+     * @return self
+     */
+    public function setContacts(Collection $contacts): self
+    {
+        $this->contacts = $contacts;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of reve
+     *
+     * @return ?string
+     */
+    public function getReve(): ?string
+    {
+        return $this->reve;
+    }
+
+    /**
+     * Set the value of reve
+     *
+     * @param ?string $reve
+     *
+     * @return self
+     */
+    public function setReve(?string $reve): self
+    {
+        $this->reve = $reve;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of filiere
+     *
+     * @return ?Filiere
+     */
+    public function getFiliere(): ?Filiere
+    {
+        return $this->filiere;
+    }
+
+    /**
+     * Set the value of filiere
+     *
+     * @param ?Filiere $filiere
+     *
+     * @return self
+     */
+    public function setFiliere(?Filiere $filiere): self
+    {
+        $this->filiere = $filiere;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of projects
+     *
+     * @return Collection
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    /**
+     * Set the value of projects
+     *
+     * @param Collection $projects
+     *
+     * @return self
+     */
+    public function setProjects(Collection $projects): self
+    {
+        $this->projects = $projects;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of messages
+     *
+     * @return Collection
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    /**
+     * Set the value of messages
+     *
+     * @param Collection $messages
+     *
+     * @return self
+     */
+    public function setMessages(Collection $messages): self
+    {
+        $this->messages = $messages;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of competences
+     *
+     * @return Collection
+     */
+    public function getCompetences(): Collection
+    {
+        return $this->competences;
+    }
+
+    /**
+     * Set the value of competences
+     *
+     * @param Collection $competences
+     *
+     * @return self
+     */
+    public function setCompetences(Collection $competences): self
+    {
+        $this->competences = $competences;
 
         return $this;
     }

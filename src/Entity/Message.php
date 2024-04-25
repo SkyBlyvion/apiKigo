@@ -22,8 +22,12 @@ class Message
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date_created = null;
 
-    #[ORM\OneToOne(inversedBy: 'message', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'message', cascade: ['persist', 'remove'])]
     private ?Project $project = null;
+
+    //relation avec user, un user peut avoir plusieurs messages, un message appartient a un seul user
+    #[ORM\ManyToOne(inversedBy: 'messages')]
+    private ?User $user = null;
 
 
 
@@ -69,4 +73,24 @@ class Message
     }
 
    
+
+    /**
+     * Get the value of user
+     */ 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @return  self
+     */ 
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }
