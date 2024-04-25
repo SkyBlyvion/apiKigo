@@ -60,10 +60,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
 
-    #[ORM\Column(length: 90)]
+    #[ORM\Column(length: 90, nullable: true)]
     private ?string $biographie = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $reve = null;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
