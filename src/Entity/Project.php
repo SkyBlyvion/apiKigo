@@ -9,7 +9,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']]
+)]
 class Project
 {
     #[ORM\Id]
@@ -30,8 +33,8 @@ class Project
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post = null;
 
-    #[ORM\OneToMany(mappedBy: 'project', cascade: ['persist', 'remove'])]
-    private ?Message $message = null;
+    #[ORM\OneToMany(mappedBy: 'project',targetEntity: Message::class, cascade: ['persist', 'remove'])]
+    private ?Collection $messages;
 
     #[ORM\ManyToMany(targetEntity:Filiere::class, inversedBy:"projects")]
     #[ORM\JoinTable(name:"project_filiere")]
@@ -53,6 +56,7 @@ class Project
         $this->competence = new ArrayCollection();
         $this->filieres = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -150,22 +154,7 @@ class Project
         return $this;
     }
 
-    public function getMessage(): ?Message
-    {
-        return $this->message;
-    }
 
-    public function setMessage(?Message $message): self
-    {
-        if ($message === null && $this->message !== null) {
-            $this->message->setProject(null);
-        }
-        if ($message !== null && $message->getProject() !== $this) {
-            $message->setProject($this);
-        }
-        $this->message = $message;
-        return $this;
-    }
 
     public function getFilieres(): Collection
     {
@@ -216,6 +205,45 @@ class Project
     public function setCompetences(Collection $competences): self
     {
         $this->competences = $competences;
+
+        return $this;
+    }
+
+    public function addMessage(Message $message): self {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setProject($this);
+        }
+        return $this;
+    }
+    
+    public function removeMessage(Message $message): self {
+        if ($this->messages->removeElement($message)) {
+            $message->setProject(null);
+        }
+        return $this;
+    }
+
+    /**
+     * Get the value of messages
+     *
+     * @return ?Collection
+     */
+    public function getMessages(): ?Collection
+    {
+        return $this->messages;
+    }
+
+    /**
+     * Set the value of messages
+     *
+     * @param ?Collection $messages
+     *
+     * @return self
+     */
+    public function setMessages(?Collection $messages): self
+    {
+        $this->messages = $messages;
 
         return $this;
     }

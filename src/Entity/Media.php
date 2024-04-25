@@ -13,7 +13,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']]
 )]
-#[ApiResource]
 class Media
 {
     #[ORM\Id]

@@ -8,7 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 // classe pour les types de contact
 #[ORM\Entity(repositoryClass: TypeRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']]
+)]
 class Type
 {
     #[ORM\Id]

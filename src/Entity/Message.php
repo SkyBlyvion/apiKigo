@@ -8,7 +8,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']]
+)]
 class Message
 {
     #[ORM\Id]
@@ -26,7 +29,7 @@ class Message
     private ?Project $project = null;
 
     //relation avec user, un user peut avoir plusieurs messages, un message appartient a un seul user
-    #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[ORM\ManyToOne(inversedBy: 'messages', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
 

@@ -9,7 +9,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompetenceRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']]
+)]
 class Competence
 {
     #[ORM\Id]
@@ -20,12 +23,12 @@ class Competence
     #[ORM\Column(length: 255)]
     private ?string $label = null;
 
-    #[ORM\ManyToOne(inversedBy: 'competence')]
+    #[ORM\ManyToOne(inversedBy: 'competence', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
     //relation table mapping user competence
-    #[ORM\ManyToMany(mappedBy: 'competences')]
+    #[ORM\ManyToMany(mappedBy: 'competences', targetEntity: User::class)]
     private Collection $users;
 
     public function __construct()
