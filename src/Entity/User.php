@@ -61,9 +61,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     #[ORM\Column(length: 90, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $biographie = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $reve = null;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
