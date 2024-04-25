@@ -23,10 +23,6 @@ class Competence
     #[ORM\Column(length: 255)]
     private ?string $label = null;
 
-    #[ORM\ManyToOne(inversedBy: 'competence', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Project $project = null;
-
     //relation table mapping user competence
     #[ORM\ManyToMany(mappedBy: 'competences', targetEntity: User::class)]
     private Collection $users;
@@ -35,6 +31,8 @@ class Competence
     {
         $this->users = new ArrayCollection();
     }
+
+    
 
     public function getId(): ?int
     {
@@ -53,19 +51,6 @@ class Competence
         return $this;
     }
 
-
-
-    public function getproject(): ?project
-    {
-        return $this->project;
-    }
-
-    public function setproject(?project $project): static
-    {
-        $this->project = $project;
-
-        return $this;
-    }
 
     /**
      * Get the value of users

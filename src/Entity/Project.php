@@ -26,9 +26,6 @@ class Project
     #[ORM\Column]
     private ?bool $isActive = null;
 
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Competence::class)]
-    private Collection $competence;
-
     #[ORM\OneToOne(inversedBy: 'project', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post = null;
@@ -53,7 +50,7 @@ class Project
 
     public function __construct()
     {
-        $this->competence = new ArrayCollection();
+        $this->competences = new ArrayCollection();
         $this->filieres = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->messages = new ArrayCollection();
@@ -88,26 +85,7 @@ class Project
 
     public function getCompetence(): Collection
     {
-        return $this->competence;
-    }
-
-    public function addCompetence(Competence $competence): self
-    {
-        if (!$this->competence->contains($competence)) {
-            $this->competence->add($competence);
-            $competence->setProject($this);
-        }
-        return $this;
-    }
-
-    public function removeCompetence(Competence $competence): self
-    {
-        if ($this->competence->removeElement($competence)) {
-            if ($competence->getProject() === $this) {
-                $competence->setProject(null);
-            }
-        }
-        return $this;
+        return $this->competences;
     }
 
     // Add and remove users
