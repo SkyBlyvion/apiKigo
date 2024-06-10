@@ -25,6 +25,7 @@ class Contact
     private ?string $value = null;
 
     #[ORM\OneToOne(inversedBy: 'contact', cascade: ['persist', 'remove'])]
+    #[Groups(['user:read', 'user:write'])] // added at 22h51
     private ?Type $type = null;
 
     //relation avec user

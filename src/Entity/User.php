@@ -30,7 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -72,7 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Post $post = null;
 
     //relation avec contact
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Contact::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Contact::class, cascade: ['persist', 'remove'])]
     #[Groups(['user:read', 'user:write'])]
     private Collection $contacts;
 
