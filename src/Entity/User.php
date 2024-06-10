@@ -77,7 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $contacts;
 
     //relation filiere, un user a une seule filiere
-    #[ORM\ManyToOne(targetEntity: Filiere::class, inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Filiere::class, inversedBy: 'users', cascade: ['persist', 'remove'])]
     #[Groups(['user:read', 'user:write'])]
     private ?Filiere $filiere = null;
 
