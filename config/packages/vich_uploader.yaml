@@ -1,6 +1,8 @@
 # config/packages/vich_uploader.yaml
 vich_uploader:
     db_driver: orm
+    metadata:
+        type: attribute
     mappings:
         media_images:
             uri_prefix: /uploads/images
