@@ -2,49 +2,60 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['user:read']],
-    denormalizationContext: ['groups' => ['user:write']]
+    normalizationContext: ['groups' => ['project:read']],
+    denormalizationContext: ['groups' => ['project:write']]
 )]
 class Project
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['project:read', 'project:write'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['project:read', 'project:write'])]
     private ?bool $isFinish = null;
 
     #[ORM\Column]
+    #[Groups(['project:read', 'project:write'])]
     private ?bool $isActive = null;
 
     #[ORM\OneToOne(inversedBy: 'project', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['project:read', 'project:write'])]
     private ?Post $post = null;
 
     #[ORM\OneToMany(mappedBy: 'project',targetEntity: Message::class, cascade: ['persist', 'remove'])]
+    #[Groups(['project:read', 'project:write'])]
     private ?Collection $messages;
 
     #[ORM\ManyToMany(targetEntity:Filiere::class, inversedBy:"projects")]
     #[ORM\JoinTable(name:"project_filiere")]
+    #[Groups(['project:read', 'project:write'])]
     private Collection $filieres;
 
     // mapping table avec project et users
     #[ORM\ManyToMany(targetEntity:User::class, inversedBy:"projects")]
     #[ORM\JoinTable(name:"project_user")]
+    #[Groups(['project:read', 'project:write'])]
     private Collection $users;
 
     // mapping competences et project manytomany
     #[ORM\ManyToMany(targetEntity:Competence::class, inversedBy:"projects")]
     #[ORM\JoinTable(name:"project_competence")]
+    #[Groups(['project:read', 'project:write'])]
     private Collection $competences;
 
 
